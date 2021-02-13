@@ -10,7 +10,7 @@ help:
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 start:   	## Start the project
-	$(DOCKER_COMPOSE) up
+	$(DOCKER_COMPOSE) up -d
 
 pause:          ## Pause docker containers
 	$(DOCKER_COMPOSE) down
