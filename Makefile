@@ -41,7 +41,7 @@ manage:
 
 tu:            ## Run django manage.py
 tu:
-	$(RUN) $(MANAGE) test
+	$(RUN) $(MANAGE) test   --noinput --keepdb
 
 # Internal rules
 

@@ -2,13 +2,19 @@ import unittest
 from datetime import datetime, date
 
 import django
+from django.contrib.auth.models import User
 from django.test import Client
 from annonces.models import Annonce
 
 
 class AnnonceTest(unittest.TestCase):
     def setUp(self):
+        try:
+            self.user = User.objects.create_superuser('admin', 'admin')
+        except:
+            pass
         self.client = Client()
+        self.client.login(username='admin', password='admin')
         self.data_url = "https://someadd.com"
         self.data_add = {
             'titre': 'Annonce de test',
@@ -64,3 +70,20 @@ class AnnonceTest(unittest.TestCase):
         # Then
         self.assertEqual(Annonce.objects.get(lien=self.data_url).titre, self.data_add['titre'])
 
+
+    def test_get_add_view(self):
+        # Given
+        try:
+            add = Annonce.objects.get(lien=self.data_url)
+            add.delete()
+        except:
+            pass
+        add = Annonce()
+        add.lien = self.data_url
+        add.save()
+
+        #When
+        response = self.client.get("/annonces/")
+
+        #Then
+        self.assertEqual(response.status_code, 200)
