@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from scrapper.toolbox import GetUrls, LoadData
+from pap.toolbox import GetUrls, LoadData
 from annonces.models import Annonce
 
 
