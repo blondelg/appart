@@ -24,4 +24,12 @@ services:
     depends_on:
       - db
 
-
+  tor:
+    build:
+      context: .
+      dockerfile: compose/tor/Dockerfile
+    command: /usr/bin/tor
+    volumes:
+      - ./tor:/etc/tor
+    ports:
+      - "9050:9050"

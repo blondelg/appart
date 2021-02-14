@@ -5,6 +5,7 @@ import django
 from django.contrib.auth.models import User
 from django.test import Client
 from annonces.models import Annonce
+from rest_framework.status import HTTP_200_OK
 
 
 class AnnonceTest(unittest.TestCase):
@@ -86,4 +87,4 @@ class AnnonceTest(unittest.TestCase):
         response = self.client.get("/annonces/")
 
         #Then
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTP_200_OK)

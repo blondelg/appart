@@ -1,10 +1,8 @@
-from requests_html import HTMLSession
-from fake_useragent import UserAgent
-from random import uniform
 from annonces.models import Annonce
 from datetime import date
 import time
 
+from client.core import TorClient
 
 mois = {
     'janvier':1,
@@ -25,8 +23,7 @@ mois = {
 class GetUrls():
     def __init__(self, search_url):
         self.search_url = search_url
-        self.session = HTMLSession()
-        self.ua = UserAgent()
+        self.session = TorClient()
         self.add_list = []
         self.get_urls()
         self._save_urls()
@@ -45,8 +42,6 @@ class GetUrls():
                 self.search_url = ""
 
     def _get(self):
-        self.session.headers['User-Agent'] = self.ua.random
-        time.sleep(uniform(5, 10))
         self.response = self.session.get(self.search_url)
 
     def _save_urls(self):
@@ -62,8 +57,7 @@ class GetUrls():
 class LoadData():
     def __init__(self, search_url):
         self.search_url = search_url
-        self.session = HTMLSession()
-        self.ua = UserAgent()
+        self.session = TorClient()
         self._get()
         self._save_datas()
 
@@ -82,8 +76,6 @@ class LoadData():
         }
 
     def _get(self):
-        self.session.headers['User-Agent'] = self.ua.random
-        time.sleep(uniform(2, 4))
         self.response = self.session.get(self.search_url)
 
     def _save_datas(self):
