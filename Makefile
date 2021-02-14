@@ -39,6 +39,10 @@ manage:        ## Run django manage.py
 manage:
 	$(RUN) $(MANAGE) $(command)
 
+tu:            ## Run django manage.py
+tu:
+	$(RUN) $(MANAGE) test
+
 # Internal rules
 
 build: docker-dev.lock

@@ -2,7 +2,7 @@ from requests_html import HTMLSession
 from fake_useragent import UserAgent
 from random import uniform
 from annonces.models import Annonce
-from datetime import datetime, date
+from datetime import date
 import time
 
 
@@ -46,7 +46,7 @@ class GetUrls():
 
     def _get(self):
         self.session.headers['User-Agent'] = self.ua.random
-        time.sleep(uniform(2, 4))
+        time.sleep(uniform(5, 10))
         self.response = self.session.get(self.search_url)
 
     def _save_urls(self):
