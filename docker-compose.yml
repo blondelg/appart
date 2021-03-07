@@ -1,4 +1,5 @@
 version: "3.3"
+
    
 services:
   db:
@@ -12,6 +13,7 @@ services:
       - ./postgres-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+
   django:
     build:
       context: .
@@ -21,15 +23,17 @@ services:
       - .:/code
     ports:
       - "8000:8000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - db
+      - tor
 
   tor:
     build:
       context: .
       dockerfile: compose/tor/Dockerfile
     command: /usr/bin/tor
-    volumes:
-      - ./tor:/etc/tor
     ports:
       - "9050:9050"
+      - "9051:9051"

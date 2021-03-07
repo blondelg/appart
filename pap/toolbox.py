@@ -82,5 +82,7 @@ class LoadData():
         try:
             self._parse()
             Annonce.objects.filter(lien=self.search_url).update(**self.data)
+            print("SAVE ANNONCE OK ", self.data['titre'])
         except:
             Annonce.objects.filter(lien=self.search_url).update(status='ERREUR')
+            print("SAVE ANNONCE ERROR ", self.data['titre'])

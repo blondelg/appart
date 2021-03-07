@@ -1,32 +1,35 @@
 import time
-from random import uniform
-
-from stem import Signal
-from stem.control import Controller
 from fake_useragent import UserAgent
 import requests
 from requests_html import HTMLSession
+from stem import Signal
+from stem.control import Controller
+from pythonping import ping
+import re
 
 
-def change_ip():
-    with Controller.from_port(port=9051) as controller:
-        controller.authenticate("my_password")
+def get_tor_container_ip():
+    return re.findall(r'[0-9]+(?:\.[0-9]+){3}', str(ping("tor")))[0]
+
+def rotate():
+    with Controller.from_port(address=f"{get_tor_container_ip()}", port=9051) as controller:
+        controller.authenticate(password="bonjour")
         controller.signal(Signal.NEWNYM)
-
+        time.sleep(controller.get_newnym_wait())
+    return
 
 class TorClient:
     proxies = {
-        'http': 'socks5://127.0.0.1:9050',
-        'https': 'socks5://127.0.0.1:9050'
+        'http': 'socks5://tor:9050',
+        'https': 'socks5://tor:9050'
     }
     ua = UserAgent()
     headers = requests.utils.default_headers()
     session = HTMLSession()
 
     def get(self, url):
-        change_ip()
+        rotate()
         self._set_ua()
-        time.sleep(uniform(3, 5))
         return self.session.get(
             url,
             proxies=self.proxies,

@@ -10,7 +10,7 @@ class AnnonceTest(unittest.TestCase):
 
     def test_tor_client(self):
         # Given/ When
-        response = self.tor_client.get("https://www.python.org/downloads/")
+        response = self.tor_client.get("https://www.google.fr")
 
         # Then
         self.assertEqual(response.status_code, HTTP_200_OK)
