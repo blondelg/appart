@@ -76,13 +76,16 @@ class LoadData():
         }
 
     def _get(self):
-        self.response = self.session.get(self.search_url)
+        try:
+            self.response = self.session.get(self.search_url)
+        except:
+            pass
 
     def _save_datas(self):
         try:
             self._parse()
             Annonce.objects.filter(lien=self.search_url).update(**self.data)
             print("SAVE ANNONCE OK ", self.data['titre'])
-        except:
+        except Exception as e:
             Annonce.objects.filter(lien=self.search_url).update(status='ERREUR')
-            print("SAVE ANNONCE ERROR ", self.data['titre'])
+            print("SAVE ANNONCE ERROR ", str(e))
