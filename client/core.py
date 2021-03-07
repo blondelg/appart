@@ -23,7 +23,7 @@ class TorClient:
         'http': 'socks5://tor:9050',
         'https': 'socks5://tor:9050'
     }
-    ua = UserAgent()
+    ua = UserAgent(use_cache_server=False, verify_ssl=False)
     headers = requests.utils.default_headers()
     session = HTMLSession()
 
