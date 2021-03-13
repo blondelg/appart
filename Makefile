@@ -1,7 +1,8 @@
-DOCKER_COMPOSE?=docker-compose
-RUN=$(DOCKER_COMPOSE) run --rm django
-EXEC=$(DOCKER_COMPOSE) exec django
+COMPOSE?=docker-compose
+RUN=$(COMPOSE) run --rm django
+EXEC=$(COMPOSE) exec django
 MANAGE=python manage.py
+DJANGO_CONTAINER=$(shell docker ps -q --filter ancestor=appart_django)
 
 .DEFAULT_GOAL := help
 .PHONY: help start stop up build reset
@@ -9,20 +10,23 @@ MANAGE=python manage.py
 help:
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
-start:   	## Start the project
-	$(DOCKER_COMPOSE) up -d
+start:      	## Start the project
+	$(COMPOSE) up -d
 
 pause:          ## Pause docker containers
-	$(DOCKER_COMPOSE) down
+	$(COMPOSE) down
 
 stop:           ## Remove docker containers
-	$(DOCKER_COMPOSE) kill
-	$(DOCKER_COMPOSE) down -v
+	$(COMPOSE) kill
+	$(COMPOSE) down -v
 
-reset:          ## Remove docker containers
+reset:          ## Reset web server container
 reset:
-	$(DOCKER_COMPOSE) down django
-	$(DOCKER_COMPOSE) rm
+	docker stop $(DJANGO_CONTAINER)
+	docker container rm $(DJANGO_CONTAINER)
+	docker image rm appart_django
+	$(COMPOSE) up -d
+
 
 createsuperuser:## Create superuser in db
 	$(RUN) $(MANAGE) createsuperuser
@@ -34,6 +38,10 @@ tty:
 shell:          ## Run django shell
 shell:
 	$(RUN) $(MANAGE) shell
+
+notebook:       ## Run jupyter notebook
+notebook:
+	$(EXEC) $(MANAGE) shell_plus --notebook
 	
 manage:        ## Run django manage.py
 manage:
@@ -48,12 +56,22 @@ tu:
 build: docker-dev.lock
 
 docker-dev.lock: $(DOCKER_FILES)
-	$(DOCKER_COMPOSE) pull --ignore-pull-failures
-	$(DOCKER_COMPOSE) build --force-rm --pull
+	$(COMPOSE) pull --ignore-pull-failures
+	$(COMPOSE) build --force-rm --pull
 	touch docker-dev.lock
 
 rm-docker-dev.lock:
 	rm -f docker-dev.lock
 
 up:
-	$(DOCKER_COMPOSE) up -d --remove-orphans
+	$(COMPOSE) up -d --remove-orphans
+	
+migrate:
+	$(RUN) $(MANAGE) migrate $(model)
+
+makemigrations:
+	$(RUN) $(MANAGE) makemigrations $(modelm)
+
+logs:           ## Display logs
+logs:
+	$(COMPOSE) logs --timestamps --tail 200 -f django
