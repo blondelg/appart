@@ -9,3 +9,8 @@ stem==1.8.0
 django-extensions==3.1.1
 pysocks==1.7.1
 pythonping==1.0.15
+nest-asyncio==1.4.0
+django-environ==0.4.5
+
+# TODO: put this in local requirements
+notebook==6.1.5
