@@ -21,8 +21,12 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
+    env_file:
+      - ./envs/local/django
+      - ./envs/local/postgres
     ports:
       - "8000:8000"
+      - "8888:8888"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
