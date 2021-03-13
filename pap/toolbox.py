@@ -1,4 +1,4 @@
-from annonces.models import Annonce
+from annonces.models import Annonce, Sources
 from datetime import date
 import time
 
@@ -48,6 +48,7 @@ class GetUrls():
         for url in self.add_list:
             add = Annonce()
             add.lien = url
+            add.source = Sources.PAP
             try:
                 add.save()
             except:
@@ -72,7 +73,7 @@ class LoadData():
             'description': self.response.html.find("div.item-description div p")[0].text,
             'code_postal': self.response.html.find("h1.item-title")[0].text.split("(")[1].split(")")[0],
             'date_publication': date(temp_date[2], temp_date[1], temp_date[0]),
-            'status': 'VALIDE'
+            'status': 'VALIDE',
         }
 
     def _get(self):

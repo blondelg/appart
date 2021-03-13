@@ -1,3 +1,5 @@
+import nest_asyncio
+
 from annonces.models import Annonce
 from datetime import date
 import time
@@ -20,6 +22,8 @@ mois = {
     'décembre':12,
 }
 
+nest_asyncio.apply()
+
 class GetUrls():
     def __init__(self, search_url):
         self.search_url = search_url
@@ -33,11 +37,11 @@ class GetUrls():
             self._get()
             # grab urls
             for add_url in list(
-                    filter(lambda x: "https://www.pap.fr/annonces" in x, self.response.html.absolute_links)):
+                    filter(lambda x: "https://www.leboncoin.fr/ventes_immobilieres" in x, self.response.html.absolute_links)):
                 self.add_list.append(add_url)
             # grab next page
-            if self.response.html.find("a#pagination-next"):
-                self.search_url = self.response.html.find("a#pagination-next")[0].absolute_links.pop()
+            if self.response.html.find("a[title='Page suivante']"):
+                self.search_url = self.response.html.find("a[title='Page suivante']")[0].absolute_links.pop()
             else:
                 self.search_url = ""
 
